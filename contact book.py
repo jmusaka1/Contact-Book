@@ -161,30 +161,34 @@ def deleteContact():
     
     #There are search results
     if len(results) == 1:
-        print("Contact deleted!")
+        for contact in results:
+            contact_book.remove(contact)
+            print('Contact deleted')
+                
 
     if len(results) > 1:
         while True:
-            delete = int(input("Which contact would you like to delete? Enter a number: "))
-            
-            for i, contact in enumerate(results, start=1):
-                if delete == i:
-                    contact_book.remove(contact)
-                    break
+            try:
+                delete = int(input("Which contact would you like to delete? Enter a number: "))
+                
+                for i, contact in enumerate(results, start=1):
+                    if delete == i:
+                        contact_book.remove(contact)
+                        print("Contact deleted")
+                        return
 
-                else:
+                if delete not in range(len(results) + 1):
                     try_again = input("Invalid number. Try again? (y/n): ")
 
                     while try_again != 'y' and try_again != 'n':
                         try_again = input("Please type 'y' or 'n': ")
-
-                    if try_again == 'y':
-                        break
-            
+                    
                     if try_again == 'n':
                         return
 
-            
+            except ValueError:
+                print('Invalid input. Try again.')
+
 
 def select():
     while True:
