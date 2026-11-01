@@ -177,7 +177,7 @@ def deleteContact():
                         print("Contact deleted")
                         return
 
-                if delete not in range(len(results) + 1):
+                if delete not in range(1, len(results)+1):
                     try_again = input("Invalid number. Try again? (y/n): ")
 
                     while try_again != 'y' and try_again != 'n':
@@ -189,6 +189,11 @@ def deleteContact():
             except ValueError:
                 print('Invalid input. Try again.')
 
+#Viewing Contacts
+def viewContact():
+    for contact in contact_book:
+        print(f"-{contact['first name']} {contact['last name']} | Phone no: {contact['phone number']}")
+    print('\n')
 
 def select():
     while True:
@@ -201,11 +206,17 @@ def select():
             if choice == 1:
                 addContact()
 
-            if choice == 2:
+            elif choice == 2:
                 searchContact()
                 
-            if choice == 3:
+            elif choice == 3:
                 deleteContact()
+
+            elif choice == 4:
+                viewContact()
+
+            else:
+                return
 
             display_options()
 
