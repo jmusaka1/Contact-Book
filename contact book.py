@@ -187,7 +187,7 @@ def deleteContact():
                         return
 
             except ValueError:
-                print('Invalid input. Try again.')
+                print('Invalid. Try again.')
 
 
 def select():
