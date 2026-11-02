@@ -11,7 +11,7 @@ def addContact():
     contact["phone number"] = ""
 
     #first name
-    first_name = input("Enter first name: ")
+    first_name = input("Enter first name: ").strip()
     while True:
         while first_name == "":
             try_again = input("The input is empty. Would you like to try again? (y/n): ")
@@ -46,7 +46,7 @@ def addContact():
 
     
     #last name
-    last_name = input("Enter last name: ")
+    last_name = input("Enter last name: ").strip()
     while True:
         while last_name == "":
             try_again = input("The input is empty. Would you like to try again? (y/n): ")
@@ -79,7 +79,7 @@ def addContact():
         break
 
     #phone number
-    phone_number = input("Enter your 10-digit phone number (no dashes): ")
+    phone_number = input("Enter your 10-digit phone number (no dashes): ").strip()
     phone_number_check = any(not char.isdigit() for char in phone_number)
 
     while phone_number_check is True or len(phone_number) != 10:
@@ -109,6 +109,11 @@ display_options()
 
 # Search Contact
 def searchContact():
+
+    if len(contact_book) == 0:
+        print("Contact book is empty \n")
+        return 0
+
     while True:
         name = input("Enter a name: ")
         name = name.strip().capitalize()
@@ -161,8 +166,12 @@ def deleteContact():
     
     #There are search results
     if len(results) == 1:
-        for contact in results:
-            contact_book.remove(contact)
+        confirmation = input("Would you like to delete this contact? (y/n):")
+        while confirmation != 'y' and confirmation != 'n':
+            confirmation = input("Please type 'y' or 'n': ")
+
+        if confirmation == 'y':
+            contact_book.remove(results[0])
             print('Contact deleted')
                 
 
@@ -173,9 +182,15 @@ def deleteContact():
                 
                 for i, contact in enumerate(results, start=1):
                     if delete == i:
-                        contact_book.remove(contact)
-                        print("Contact deleted")
-                        return
+                        confirmation = input( "Would you like to delete this contact? (y/n):")
+
+                        while confirmation != 'y' and confirmation != 'n':
+                            confirmation = input("Please type 'y' or 'n': ")
+
+                        if confirmation == 'y':
+                            contact_book.remove(contact)
+                            print('Contact deleted')
+                            return
 
                 if delete not in range(1, len(results)+1):
                     try_again = input("Invalid number. Try again? (y/n): ")
@@ -191,6 +206,10 @@ def deleteContact():
 
 #Viewing Contacts
 def viewContact():
+
+    if len(contact_book) == 0:
+        print("Contact book is empty")
+
     for contact in contact_book:
         print(f"-{contact['first name']} {contact['last name']} | Phone no: {contact['phone number']}")
     print('\n')
