@@ -10,34 +10,43 @@ def addContact():
     contact["last name"] = ""
     contact["phone number"] = ""
 
+    name_validation = True
+
     #first name
     first_name = input("Enter first name: ").strip().capitalize()
-    while first_name == "":
-        try_again = input("The input is empty. Would you like to try again? (y/n): ")
+    name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in first_name)
 
-        while try_again != 'y' and try_again != 'n':
-            try_again = input("Please type 'y' or 'n': ")
+    if first_name == '' or name_check is True:
+        name_validation = False
 
-        if try_again == 'y':
-            first_name = input("Enter a name: ")
-            first_name = first_name.strip().capitalize()
+    while name_validation is False:
+        first_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in first_name)
+        if first_name == "":
+            try_again = input("The input is empty. Would you like to try again? (y/n): ")
 
-        if try_again == 'n':
-            return
+            while try_again != 'y' and try_again != 'n':
+                try_again = input("Please type 'y' or 'n': ").lower()
 
-    first_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in first_name)
+            if try_again == 'y':
+                first_name = input("Enter a name: ")
+                first_name = first_name.strip().capitalize()
 
+            if try_again == 'n':
+                return
 
-    while first_name_check is True:
-        proceed = input("The name is invalid. Would you like to try again? (y/n): ")
-        while proceed != 'y' and proceed != 'n':
-            proceed = input("Please type 'y' or 'n': ")
+        elif first_name_check is True:
+            proceed = input("The name is invalid. Would you like to try again? (y/n): ")
+            while proceed != 'y' and proceed != 'n':
+                proceed = input("Please type 'y' or 'n': ")
 
-        if proceed == 'y':
-            first_name = input("Enter first name: ")
-            first_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in first_name)
-        if proceed == 'n':
-            return
+            if proceed == 'y':
+                first_name = input("Enter first name: ")
+            
+            if proceed == 'n':
+                return
+
+        else:
+            name_validation = True
         
     contact["first name"] += first_name
         
@@ -45,31 +54,40 @@ def addContact():
     
     #last name
     last_name = input("Enter last name: ").strip().capitalize()
-    while last_name == "":
-        try_again = input("The input is empty. Would you like to try again? (y/n): ")
+    name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in last_name)
 
-        while try_again != 'y' and try_again != 'n':
-            try_again = input("Please type 'y' or 'n': ")
+    if last_name == '' or name_check is True:
+        name_validation = False
 
-        if try_again == 'y':
-            last_name = input("Enter last name: ")
-            last_name = last_name.strip().capitalize()
+    while name_validation is False:
+        name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in last_name)
 
-        if try_again == 'n':
-            return
+        if last_name == "":
+            try_again = input("The input is empty. Would you like to try again? (y/n): ")
 
-    last_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in last_name)
+            while try_again != 'y' and try_again != 'n':
+                try_again = input("Please type 'y' or 'n': ")
 
-    while last_name_check is True:
-        proceed = input("The name is invalid. Would you like to try again? (y/n): ")
-        while proceed != 'y' and proceed != 'n':
-            proceed = input("Please type 'y' or 'n': ")
+            if try_again == 'y':
+                last_name = input("Enter last name: ")
+                last_name = last_name.strip().capitalize()
 
-        if proceed == 'y':
-            last_name = input("Enter last name: ")
-            last_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in last_name)
-        if proceed == 'n':
-            return
+            if try_again == 'n':
+                return
+
+        elif name_check is True:
+            proceed = input("The name is invalid. Would you like to try again? (y/n): ")
+            while proceed != 'y' and proceed != 'n':
+                proceed = input("Please type 'y' or 'n': ")
+
+            if proceed == 'y':
+                last_name = input("Enter last name: ")
+            
+            if proceed == 'n':
+                return
+
+        else:
+            name_validation = True
             
     contact["last name"] += last_name
         
@@ -137,7 +155,7 @@ def searchContact():
             try_again = input("No search results. Try again? (y/n): ")
 
             while try_again != 'y' and try_again != 'n':
-                try_again = input("Please type 'y' or 'n': ")
+                try_again = input("Please type 'y' or 'n': ").lower()
                     
             if try_again == 'n':
                 return 0
@@ -188,11 +206,14 @@ def deleteContact():
                             print('Contact deleted')
                             return
 
+                        else:
+                            return
+
                 if delete not in range(1, len(results)+1):
                     try_again = input("Invalid number. Try again? (y/n): ")
 
                     while try_again != 'y' and try_again != 'n':
-                        try_again = input("Please type 'y' or 'n': ")
+                        try_again = input("Please type 'y' or 'n': ").lower()
                     
                     if try_again == 'n':
                         return
@@ -217,6 +238,29 @@ def updateContact():
     if results == 0:
         return
 
+    selected_contact = {}
+
+    if len(results) == 1:
+        selected_contact = results[0]
+
+    else:
+        while True:
+            try:
+                choose = int(input("Which contact would you like to choose? Enter a number: "))
+
+                if choose not in range(1, len(results) + 1):
+                    raise ValueError
+
+                else:
+                    break
+
+            except ValueError:
+                print("Invalid input. Try again.")
+
+        for i, contact in enumerate(results, start=1):
+            if choose == i:
+                selected_contact = contact
+
     while True:
         try:
             update_selection = int(input(
@@ -232,68 +276,109 @@ def updateContact():
 
             #Names
             if update_selection == 1 or update_selection == 2:
-                if len(results) == 1:
-                    while True:
-                        new_name = input("Enter the new name: ").strip().capitalize()
-                        while new_name == "":
-                            try_again = input(
-                                "The input is empty. Would you like to try again? (y/n): ")
+                new_name = input("Enter the new name: ").strip().capitalize()
+                new_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in new_name)
+                name_validation = True
 
-                            while try_again != 'y' and try_again != 'n':
-                                try_again = input("Please type 'y' or 'n': ")
+                if new_name == '' or new_name_check is True or (new_name == selected_contact['first name'] and update_selection == 1) or (new_name == selected_contact['last name'] and update_selection == 2):
+                    name_validation = False
 
-                            if try_again == 'y':
-                                new_name = input("Enter a name: ")
-                                new_name = new_name.strip().capitalize()
+                while name_validation is False:
+                    new_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in new_name)
+                    if new_name == "":
+                        try_again = input(
+                            "The input is empty. Would you like to try again? (y/n): ")
 
-                            if try_again == 'n':
-                                return
+                        while try_again != 'y' and try_again != 'n':
+                            try_again = input("Please type 'y' or 'n': ").lower()
 
-                        new_name_check = any(not (char.isalpha() or char == '-' or char == "'") for char in new_name)
+                        if try_again == 'y':
+                            new_name = input("Enter a name: ")
+                            new_name = new_name.strip().capitalize()
 
-                        while new_name_check is True:
-                            proceed = input(
-                                "The name is invalid. Would you like to try again? (y/n): ")
-                            while proceed != 'y' and proceed != 'n':
-                                proceed = input("Please type 'y' or 'n': ")
+                        if try_again == 'n':
+                            return
 
-                            if proceed == 'y':
-                                new_name = input("Enter name: ")
-                                new_name_check = any(
-                                    not (char.isalpha() or char == '-' or char == "'") for char in new_name)
-                            
-                            if proceed == 'n':
-                                return
+  
+                    elif new_name_check is True:
+                        proceed = input(
+                            "The name is invalid. Would you like to try again? (y/n): ")
+                        while proceed != 'y' and proceed != 'n':
+                            proceed = input("Please type 'y' or 'n': ").lower()
+
+                        if proceed == 'y':
+                            new_name = input("Enter name: ").strip().capitalize()
+                            new_name_check = any(
+                                not (char.isalpha() or char == '-' or char == "'") for char in new_name)
                         
-                        if new_name == results[0]['first name'] or new_name == results[0]['last name']:
-                            try_again = input("This is the old name. Would you like to try again? (y/n): ")
+                        if proceed == 'n':
+                            return
 
-                            while try_again != 'y' and try_again != 'n':
-                                try_again = input("Please type 'y' or 'n': ")
+                    elif (new_name == selected_contact['first name'] and update_selection == 1) or (new_name == selected_contact['last name'] and update_selection == 2) :
+                        try_again = input("This is the old name. Would you like to try again? (y/n): ")
 
-                            if try_again == 'n':
-                                return
-                        else:
-                            break
+                        while try_again != 'y' and try_again != 'n':
+                            try_again = input("Please type 'y' or 'n': ").lower()  
 
+                        if try_again == 'y':
+                            new_name = input("Enter a name: ")
+                            new_name = new_name.strip().capitalize()         
 
-                confirmation = input("Confirm? (y/n): ")
+                        if try_again == 'n':
+                            return
 
-                while confirmation != 'y' and confirmation != 'n':
-                    confirmation = input("Please type 'y' or 'n': ")
-
-                if confirmation == 'y':
-                    if update_selection == 1:
-                        results[0]['first name'] = new_name
-                    
                     else:
-                        results[0]['last name'] = new_name
+                        name_validation = True
+                
+            else:
+                while True:
+                    new_phone_number = input("Enter your new 10-digit phone number (no dashes): ").strip()
+                    phone_number_check = any(not char.isdigit() for char in new_phone_number)
 
-                    print("Contact updated!")
-                    return
+                    while phone_number_check is True or len(new_phone_number) != 10:
+                        proceed = input("Invalid number. Would you like to try again? (y/n): ")
 
-                if confirmation == 'n':
-                    return
+                        while proceed != 'y' and proceed != 'n':
+                            proceed = input("Please type 'y' or 'n': ")
+                        
+                        if proceed == 'y':
+                            new_phone_number = input("Enter your 10-digit phone number (no dashes): ").strip()
+                            phone_number_check = any(not char.isdigit() for char in new_phone_number)
+                                
+                        if proceed == 'n':
+                            return
+
+                    if new_phone_number == selected_contact['phone number']:
+                        try_again = input("This is the old phone number. Would you like to try again? (y/n): ")
+
+                        while try_again != 'y' and try_again != 'n':
+                            try_again = input("Please type 'y' or 'n': ").lower()
+
+                        if try_again == 'n':
+                            return
+                    else:
+                        break
+
+            confirmation = input("Confirm? (y/n): ")
+
+            while confirmation != 'y' and confirmation != 'n':
+                confirmation = input("Please type 'y' or 'n': ")
+
+            if confirmation == 'y':
+                if update_selection == 1:
+                    selected_contact['first name'] = new_name
+                
+                elif update_selection == 2:
+                    selected_contact['last name'] = new_name
+
+                else:
+                    selected_contact['phone number'] = new_phone_number
+
+                print("Contact updated!")
+                return
+
+            if confirmation == 'n':
+                return
 
         except ValueError:
             print('Invalid input. Try again')
